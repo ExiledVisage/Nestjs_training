@@ -6,18 +6,32 @@ import {
     HttpStatus,
     Post,
     Request,
-    UseGuards
+    UseGuards,
+    UsePipes
   } from '@nestjs/common';
-  import { AuthGuard } from './auth.guard';
-  import { AuthService } from './auth.service';
+
+import { AuthGuard } from './auth.guard';
+import { AuthService } from './auth.service';
+import { Http2Server } from 'http2';
+import { JoiValidationPipe } from 'src/pipes/validation.pipe';
+import { CreateUserDto } from 'src/dto/CreateUserDto.dto';
+import Joi from 'joi';
   
   @Controller('auth')
   export class AuthController {
     constructor(private authService: AuthService) {}
   
+    
+
+    
+
+
+
+  
     @HttpCode(HttpStatus.OK)
     @Post('login')
-    signIn(@Body() signInDto: Record<string, any>) {
+    @UsePipes(new JoiValidationPipe(UserSchema))
+    signIn(@Body() signInDto: SingInDto) {
       return this.authService.signIn(signInDto.username, signInDto.password);
     }
   
@@ -27,3 +41,15 @@ import {
       return req.user;
     }
   }
+
+  export class SingInDto
+{        
+    username: string;    
+    password: string;
+}
+
+const UserSchema = Joi.object(
+    {
+        username: Joi.string().required(),
+        password: Joi.string().required(),
+    })
