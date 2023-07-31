@@ -15,7 +15,22 @@ import { AuthService } from './auth.service';
 import { Http2Server } from 'http2';
 import { JoiValidationPipe } from 'src/pipes/validation.pipe';
 import { CreateUserDto } from 'src/dto/CreateUserDto.dto';
-import Joi from 'joi';
+import { any } from 'joi';
+import * as Joi from 'joi'
+
+
+export interface SingInDto
+{        
+    username: string;    
+    password: string;
+}
+
+const userSchema = Joi.object(
+  {
+    username: Joi.string().required(),
+    password: Joi.string().required(),
+  })
+
   
   @Controller('auth')
   export class AuthController {
@@ -30,7 +45,7 @@ import Joi from 'joi';
   
     @HttpCode(HttpStatus.OK)
     @Post('login')
-    @UsePipes(new JoiValidationPipe(UserSchema))
+    @UsePipes(new JoiValidationPipe(userSchema))
     signIn(@Body() signInDto: SingInDto) {
       return this.authService.signIn(signInDto.username, signInDto.password);
     }
@@ -42,14 +57,5 @@ import Joi from 'joi';
     }
   }
 
-  export class SingInDto
-{        
-    username: string;    
-    password: string;
-}
 
-const UserSchema = Joi.object(
-    {
-        username: Joi.string().required(),
-        password: Joi.string().required(),
-    })
+

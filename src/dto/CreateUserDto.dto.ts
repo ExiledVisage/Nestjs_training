@@ -1,14 +1,17 @@
 import { IsNotEmpty, IsNumber } from "class-validator";
+import Joi from "joi";
 
 
 export class CreateUserDto 
-{
-    @IsNumber()
+{    
     userId: number;
-
-    @IsNotEmpty()
+    
     username: string;
-
-    @IsNotEmpty()
+    
     password: string;
 }
+
+
+
+
+
